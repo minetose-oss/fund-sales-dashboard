@@ -14,20 +14,21 @@
   },
   "dependencies": {
     "@trpc/server": "^11.0.0-rc.648",
-    "express": "^4.21.2",
+    "better-sqlite3": "^12.4.1",
     "cors": "^2.8.5",
-    "socket.io": "^4.7.2",
+    "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.3",
+    "express": "^4.21.2",
     "mysql2": "^3.11.5",
-    "zod": "^3.24.1",
-    "dotenv": "^16.4.7"
+    "socket.io": "^4.7.2",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
     "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
+    "drizzle-kit": "^0.30.1",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
-    "drizzle-kit": "^0.30.1"
+    "typescript": "^5.7.2"
   }
 }

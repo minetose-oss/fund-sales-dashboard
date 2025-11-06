@@ -1,29 +1,7 @@
 import { db } from '../db/index.js';
 import { funds, sales, marketInsights } from '../db/schema.js';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-export async function seedDatabase() {
-  console.log('Running migrations...');
-
-  try {
-    // Run migrations first
-    const dbPath = join(__dirname, '../../database.sqlite');
-    const sqlite = new Database(dbPath);
-    const database = drizzle(sqlite);
-
-    await migrate(database, { migrationsFolder: join(__dirname, '../../drizzle') });
-    console.log('Migrations completed!');
-  } catch (error) {
-    console.log('Migration error (may already be applied):', error);
-  }
-
+async function seedDatabase() {
   console.log('Seeding database...');
 
   try {
@@ -101,8 +79,8 @@ export async function seedDatabase() {
       },
     ];
 
-    const insertedFunds = await db.insert(funds).values(sampleFunds);
-    console.log(`Inserted ${sampleFunds.length} funds`);
+    await db.insert(funds).values(sampleFunds);
+    console.log(`✓ Inserted ${sampleFunds.length} funds`);
 
     // Seed sample sales
     const sampleSales = [
@@ -151,7 +129,7 @@ export async function seedDatabase() {
     ];
 
     await db.insert(sales).values(sampleSales);
-    console.log(`Inserted ${sampleSales.length} sales records`);
+    console.log(`✓ Inserted ${sampleSales.length} sales records`);
 
     // Seed sample market insights
     const sampleInsights = [
@@ -188,24 +166,18 @@ export async function seedDatabase() {
     ];
 
     await db.insert(marketInsights).values(sampleInsights);
-    console.log(`Inserted ${sampleInsights.length} market insights`);
+    console.log(`✓ Inserted ${sampleInsights.length} market insights`);
 
-    console.log('Database seeding completed successfully!');
+    console.log('\n✅ Database seeding completed successfully!');
   } catch (error) {
-    console.error('Error seeding database:', error);
-    throw error;
+    console.error('❌ Error seeding database:', error);
+    process.exit(1);
   }
 }
 
-// Run seeding if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  seedDatabase()
-    .then(() => {
-      console.log('Seeding script completed');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('Seeding script failed:', error);
-      process.exit(1);
-    });
-}
+seedDatabase()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

@@ -1,21 +1,21 @@
-import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import Database from 'better-sqlite3';
 import * as schema from './schema.js';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 dotenv.config();
 
-const poolConnection = mysql.createPool({
-  host: process.env.DATABASE_HOST || 'localhost',
-  port: parseInt(process.env.DATABASE_PORT || '3306'),
-  user: process.env.DATABASE_USER || 'root',
-  password: process.env.DATABASE_PASSWORD || '',
-  database: process.env.DATABASE_NAME || 'fund_sales_dashboard',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-export const db = drizzle(poolConnection, { schema, mode: 'default' });
+// SQLite database file path
+const dbPath = process.env.DATABASE_PATH || join(__dirname, '../../database.sqlite');
+
+const sqlite = new Database(dbPath);
+sqlite.pragma('journal_mode = WAL');
+
+export const db = drizzle(sqlite, { schema });
 
 export { schema };

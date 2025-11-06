@@ -6,12 +6,8 @@ dotenv.config();
 export default {
   schema: './src/db/schema.ts',
   out: './drizzle',
-  dialect: 'mysql',
+  dialect: 'sqlite',
   dbCredentials: {
-    host: process.env.DATABASE_HOST || 'localhost',
-    port: parseInt(process.env.DATABASE_PORT || '3306'),
-    user: process.env.DATABASE_USER || 'root',
-    password: process.env.DATABASE_PASSWORD || '',
-    database: process.env.DATABASE_NAME || 'fund_sales_dashboard',
+    url: process.env.DATABASE_PATH || './database.sqlite',
   },
 } satisfies Config;
